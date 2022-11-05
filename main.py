@@ -1,6 +1,7 @@
 import Resources.Services.FileManager as fm
 import Resources.Functions.HammingFunctions as hf
 import Resources.Functions.GraspFunctions as grsp
+import GA as GA
 
 import sys
 from time import sleep
@@ -25,21 +26,16 @@ def main():
     file_name=sys.argv[2]
     seconds=sys.argv[4]
     t=threading.Thread(target=timer,args=[int(seconds)])
-    
     sequences=fm.open_File_By_Name(file_name)
-
     threshold=0.8
+    mutation_rate=0.4
     t.start()
     metric=hf.min_Hamming_Distance(sequences,threshold)
     current_time=time.time()
-
-
-
-    for solution in solutions:
-        print(f'Quality: {solution[1]} Time: {solution[2]}')
-        if(solution==solutions[-1]):
-            print(f'Best Solution Found: {solution[0]}')
-    return 0
+    best_answer=GA.GA(sequences,threshold,t,metric,current_time,mutation_rate)
+    print(f'best answer found: {best_answer[0]}')
+    print(f'quality: {best_answer[1]}')
+    print(f'time elapsed: {best_answer[2]}')
 
 if __name__ == '__main__':
     if(len(sys.argv)==1):
