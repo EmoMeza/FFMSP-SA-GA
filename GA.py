@@ -8,27 +8,25 @@ solutions=[]
 
 
 def GA(sequences,threshold,t,metric,current_time,mutation_rate):
-    i=0
-    while t.is_alive():
-        first_generation=first_Generation(sequences,threshold)
-        best_answer=fitness(sequences,first_generation,metric)[0]
-        best_quality=uf.answer_Quality(sequences,best_answer,metric)
-        best_time_found=time.time()-current_time
-        current_generation=first_generation
-        print(f'first generation created')
-        while(t.is_alive()):
-            print(f'current generation: {i}')
-            generation_ordered_by_fitness=fitness(sequences,current_generation,metric)
-            print(uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric))
-            if(generation_ordered_by_fitness[0]>best_answer):
-                best_answer=generation_ordered_by_fitness[0]
-                best_quality=uf.answer_Quality(sequences,best_answer,metric)
-                best_time_found=time.time()-current_time
-                print(f'new best answer found, quality: {best_quality}')
-            new_generation=crossover(generation_ordered_by_fitness)
-            new_generation=mutation(new_generation,mutation_rate)
-            current_generation=new_generation
-            i+=1
+    i=1
+    first_generation=first_Generation(sequences,threshold)
+    best_answer=fitness(sequences,first_generation,metric)[0]
+    best_quality=uf.answer_Quality(sequences,best_answer,metric)
+    best_time_found=time.time()-current_time
+    current_generation=first_generation
+    print(f'first generation created')
+    while(t.is_alive()):
+        generation_ordered_by_fitness=fitness(sequences,current_generation,metric)
+        if(uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)>best_quality):
+            best_answer=generation_ordered_by_fitness[0]
+            best_quality=uf.answer_Quality(sequences,best_answer,metric)
+            best_time_found=time.time()-current_time
+            #print the quality of the best answer found and the time it took to find it
+            print(f'best answer found: {best_quality} in {best_time_found} seconds')
+        new_generation=crossover(generation_ordered_by_fitness)
+        new_generation=mutation(new_generation,mutation_rate)
+        current_generation=new_generation
+        i+=1
     return best_answer,best_quality,best_time_found
 
 
@@ -39,6 +37,8 @@ def first_Generation(sequences,threshold):
     return first_generation
 
 def fitness(sequences,current_generation,metric):
+    new_current_generation=[]
+    new_current_generation=current_generation
     if(len(current_generation)==0):
         return False
     fitness=[]
@@ -50,10 +50,10 @@ def fitness(sequences,current_generation,metric):
                 temp=fitness[i]
                 fitness[i]=fitness[j]
                 fitness[j]=temp
-                temp=current_generation[i]
-                current_generation[i]=current_generation[j]
-                current_generation[j]=temp
-    return current_generation
+                temp=new_current_generation[i]
+                new_current_generation[i]=new_current_generation[j]
+                new_current_generation[j]=temp
+    return new_current_generation
 
 def crossover(answers):
     new_generation=[]
