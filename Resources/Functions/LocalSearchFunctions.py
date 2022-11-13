@@ -47,6 +47,8 @@ def find_Better_Char(sequences,answer,metric,position):
 def constructionPhase(sequences,threshold):
     return pg.Probabilistic_Greedy(sequences,threshold)
     # return pg.build_random_sequence(sequences)
+def random_constructionPhase(sequences,threshold):
+    return pg.random_solution(sequences)
 
 def localSearchPhase(sequences,answer,metric):
     i=int(0.8*len(answer))

@@ -7,10 +7,12 @@ import time
 solutions=[]
 
 
-def GA(sequences,threshold,t,metric,current_time,mutation_rate):
+def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size):
+    cont_same=0
+    last_gen_best=0
     i=1
     #Se crea la primera generacion utilizando el greedy probabilista
-    first_generation=first_Generation(sequences,threshold)
+    first_generation=first_Generation(sequences,threshold,population_size)
     best_answer=fitness(sequences,first_generation,metric)[0]
     best_quality=uf.answer_Quality(sequences,best_answer,metric)
     best_time_found=time.time()-current_time
@@ -30,20 +32,33 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate):
             best_time_found=time.time()-current_time
             #print the quality of the best answer found and the time it took to find it
             print(f'best answer found: {best_quality} in {best_time_found} seconds')
+        if(last_gen_best==uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)):
+            cont_same+=1
+            if cont_same==10:
+                #create a new answer replacin the second best answer
+                generation_ordered_by_fitness[1]=first_generation[random.randint(0,population_size-1)]
+                #reset the counter
+                cont_same=0
+        else:
+            #reset the counter
+            cont_same=0
         #Se crea la nueva generacion utilizando crossover
         new_generation=crossover(generation_ordered_by_fitness)
         #Se mutan las respuestas de la nueva generacion
         new_generation=mutation(new_generation,mutation_rate)
         #La nueva generacion se convierte en la generacion actual
+        last_gen_best=uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)
         current_generation=new_generation
         i+=1
     return best_answer,best_quality,best_time_found
 
 
 #Se crea la primera generacion en base al greedy probabilista
-def first_Generation(sequences,threshold):
+def first_Generation(sequences,threshold,population_size):
+    #print that the first generation is being created
+    print('creating first generation')
     first_generation=[]
-    for i in range(8):
+    for i in range(population_size):
         first_generation.append(lsf.constructionPhase(sequences,threshold))
     return first_generation
 
@@ -76,49 +91,39 @@ def crossover(answers):
     for i in range(len(answers)):
         answers_to_use.append(answers[i])
     
-    quarters_list=quarters(answers_to_use)
+    tenth_list=tenth(answers_to_use)
     
     for i in range(len(answers)):
         new_answer=[]
-        for j in range(4):
-                new_answer+=quarters_list[j][random.randint(0,len(quarters_list[j])-1)]
+        for j in range(10):
+                new_answer+=tenth_list[random.randint(0,1)][j]
         new_generation.append(new_answer)
-    
     return new_generation 
 
-#Esta funcion ayuda a crossover a crear los cuartos de las respuestas de la primera mitad
-#de la lista de respuestas. Se encarga de crear una lista de 4 listas, cada una de estas
-#listas contiene los cuartos de las respuestas de la primera mitad de la lista de respuestas
-def quarters(answers):
-    first_quarter=[]
-    for i in range(int(len(answers)/2)):
-        quarter=[]
-        for j in range(int(len(answers[0])/4)):
-            quarter.append(answers[i][j])
-        first_quarter.append(quarter)
-    
-    second_quarter=[]
-    for i in range(int(len(answers)/2)):
-        quarter=[]
-        for j in range(int(len(answers[0])/4),int(len(answers[0])/2)):
-            quarter.append(answers[i][j])
-        second_quarter.append(quarter)
-    
-    third_quarter=[]
-    for i in range(int(len(answers)/2)):
-        quarter=[]
-        for j in range(int(len(answers[0])/2),int(len(answers[0])*3/4)):
-            quarter.append(answers[i][j])
-        third_quarter.append(quarter)
-    
-    fourth_quarter=[]
-    for i in range(int(len(answers)/2)):
-        quarter=[]
-        for j in range(int(len(answers[0])*3/4),int(len(answers[0]))):
-            quarter.append(answers[i][j])
-        fourth_quarter.append(quarter)
-    
-    return [first_quarter,second_quarter,third_quarter,fourth_quarter]
+def tenth(answers):
+    tenth_list=[]
+    father=answers[0]
+    mother=answers[1]
+    father_genes=[]
+    mother_genes=[]
+    #first we save the genes of the father
+    for i in range(10):
+        gen=[]
+        for j in range(int(len(father)/10)):
+            gen.append(father[i*int(len(father)/10)+j])
+        father_genes.append(gen)
+    #then we save the genes of the mother
+    for i in range(10):
+        gen=[]
+        for j in range(int(len(mother)/10)):
+            gen.append(mother[i*int(len(mother)/10)+j])
+        mother_genes.append(gen)
+    tenth_list.append(father_genes)
+    tenth_list.append(mother_genes)
+    return tenth_list
+
+
+
 
 
 #Mutacion se usa una vez creada una nueva generacion para mutar las respuestas

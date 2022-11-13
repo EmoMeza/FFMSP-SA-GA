@@ -11,6 +11,11 @@ def build_PG_Solution(sequences,metric):
         else:
             answer.append(get_character_for_answer_PG(answer,sequences,metric,i))            
     return answer
+def build_random_solution(sequences):
+    answer=[]
+    for i in range(sequences[0].get_len()-1):
+        answer.append(random.choice(['A','C','G','T']))
+    return answer
 
 def get_character_for_answer_PG(answer,sequences,metric,index):
     selective_answer=[]

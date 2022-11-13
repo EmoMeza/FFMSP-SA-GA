@@ -25,14 +25,15 @@ def main():
     
     file_name=sys.argv[2]
     seconds=sys.argv[4]
+    population=int(sys.argv[6])
     t=threading.Thread(target=timer,args=[int(seconds)])
     sequences=fm.open_File_By_Name(file_name)
-    threshold=0.8
+    threshold=0.85
     mutation_rate=0.5
     t.start()
     metric=hf.min_Hamming_Distance(sequences,threshold)
     current_time=time.time()
-    best_answer=GA.GA(sequences,threshold,t,metric,current_time,mutation_rate)
+    best_answer=GA.GA(sequences,threshold,t,metric,current_time,mutation_rate,population)
     print(f'best answer found: {best_answer[0]}')
     print(f'quality: {best_answer[1]}')
     print(f'time elapsed: {best_answer[2]}')
@@ -52,7 +53,7 @@ if __name__ == '__main__':
         print("Example: python3 grasp.py -i sequences.txt -t 6000")
         print("This program will display the time and quality of the solution obtained")
 
-    elif((len(sys.argv)==5 and sys.argv[1]=="-i" and sys.argv[3]=="-t")):
+    elif((len(sys.argv)==7 and sys.argv[1]=="-i" and sys.argv[3]=="-t" and sys.argv[5]=="-p")):
         main()
     else:
         print("Incorrect execution")

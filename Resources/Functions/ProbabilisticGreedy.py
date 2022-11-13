@@ -7,3 +7,5 @@ def Probabilistic_Greedy(sequences,threshold):
     metric=hf.min_Hamming_Distance(sequences,threshold)
     answer=uf.build_PG_Solution(sequences,metric)
     return answer
+def random_solution(sequences):
+    return uf.build_random_solution(sequences)
