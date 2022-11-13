@@ -18,8 +18,11 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate):
     print(f'first generation created')
 
     while(t.is_alive()):
+        #print the number of generation
+        print(f'generation {i}')
         #ordenamos las respuestas de la generacion actual
         generation_ordered_by_fitness=fitness(sequences,current_generation,metric)
+        print(uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric))
         #Revisamos si la mejor respuesta de la generacion actual es mejor que la mejor respuesta
         if(uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)>best_quality):
             best_answer=generation_ordered_by_fitness[0]
@@ -40,7 +43,7 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate):
 #Se crea la primera generacion en base al greedy probabilista
 def first_Generation(sequences,threshold):
     first_generation=[]
-    for i in range(20):
+    for i in range(8):
         first_generation.append(lsf.constructionPhase(sequences,threshold))
     return first_generation
 
@@ -88,7 +91,6 @@ def crossover(answers):
 #listas contiene los cuartos de las respuestas de la primera mitad de la lista de respuestas
 def quarters(answers):
     first_quarter=[]
-    
     for i in range(int(len(answers)/2)):
         quarter=[]
         for j in range(int(len(answers[0])/4)):

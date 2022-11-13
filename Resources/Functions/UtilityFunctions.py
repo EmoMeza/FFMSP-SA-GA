@@ -66,7 +66,7 @@ def answer_Quality(sequences,answer,metric):
     for i in range(len(sequences)):
         if(hf.get_Hamming_Distance(answer,sequences[i],len(answer))>=metric):
             counter=counter+1
-    return counter/len(sequences)
+    return counter
     
 def resetSequences(sequences):
     for i in range(len(sequences)):

@@ -28,7 +28,7 @@ def main():
     t=threading.Thread(target=timer,args=[int(seconds)])
     sequences=fm.open_File_By_Name(file_name)
     threshold=0.8
-    mutation_rate=0.4
+    mutation_rate=0.5
     t.start()
     metric=hf.min_Hamming_Distance(sequences,threshold)
     current_time=time.time()
