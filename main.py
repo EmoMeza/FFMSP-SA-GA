@@ -16,20 +16,16 @@ def timer(seconds):
         sleep(1)
     return True
 
-    
-
-
-
 
 def main():
     
     file_name=sys.argv[2]
     seconds=sys.argv[4]
-    population=int(sys.argv[6])
+    threshold=float(sys.argv[6])
+    population=int(sys.argv[8])
+    mutation_rate=float(sys.argv[10])
     t=threading.Thread(target=timer,args=[int(seconds)])
     sequences=fm.open_File_By_Name(file_name)
-    threshold=0.85
-    mutation_rate=0.5
     t.start()
     metric=hf.min_Hamming_Distance(sequences,threshold)
     current_time=time.time()
@@ -53,7 +49,7 @@ if __name__ == '__main__':
         print("Example: python3 grasp.py -i sequences.txt -t 6000")
         print("This program will display the time and quality of the solution obtained")
 
-    elif((len(sys.argv)==7 and sys.argv[1]=="-i" and sys.argv[3]=="-t" and sys.argv[5]=="-p")):
+    elif((len(sys.argv)==11 and sys.argv[1]=="-i" and sys.argv[3]=="-t" and sys.argv[5]=="-th" and sys.argv[7]=="-p" and sys.argv[9]=="-mr")):
         main()
     else:
         print("Incorrect execution")
