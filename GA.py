@@ -54,7 +54,7 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size):
         if(last_gen_best==uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)):
             
             # Si es igual aumentamos el contador de respuestas iguales
-            cont_ansame+=1
+            cont_same+=1
             
             # Si el contador de respuestas iguales es igual a 10 reiniciamos el contador e ingresamos una respuesta de la primera generacion
             if cont_same==10:
@@ -86,21 +86,38 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size):
 
 #Se crea la primera generacion en base al greedy probabilista
 def first_Generation(sequences,threshold,population_size):
+    
     #print that the first generation is being created
     print('creating first generation')
+    
+    #creamos la lista de agentes para la primera generacion
     first_generation=[]
+    
+    # Creamos una iteracion para cada agente de la primera generacion
     for i in range(population_size):
+        
+        # Añadimos un agente a la lista de agentes de la primera generacion
         first_generation.append(lsf.constructionPhase(sequences,threshold))
+        
+        # Se entrega el progreso de la creacion de la primera generacion
         print(f'agent {i+1}/{population_size} created')
     return first_generation
 
-#El fitness revisa la calidad de cada respuesta y las ordena de mayor a menor
-# en base a su calidad haciendo los mismos cambios en la lista de respuestas
-# teniendo asi en la primera mitad de la lista las respuestas con mayor calidad 
+# La funcion fitness ordena la generacion actual en base a su calidad
+# Esto lo hace creando una lista de calidades y ordenandola de mayor a menor
+# Realizando los mismos cambios en la lista de agentes de la generacion actual
 def fitness(sequences,current_generation,metric):
+
+    # Creamos una lista de calidadess
     fitness=[]
+
+    # Se crea una iteracion para cada agente de la generacion actual
     for agent in current_generation:
+    
+        # Se añade la calidad del agente a la lista de calidades
         fitness.append(uf.answer_Quality(sequences,agent,metric))
+    
+    #se ordena la lista de calidades de mayor a menor realizando los mismos cambios en la lista de agentes de la generacion actual
     for i in range(len(fitness)):
         for j in range(len(fitness)):
             if(fitness[i]>fitness[j]):
@@ -112,26 +129,36 @@ def fitness(sequences,current_generation,metric):
                 current_generation[j]=temp
     return current_generation
 
-#Crossover se encarga de mezclar las respuestas de la primera mitad de la lista
-#Esto lo hacen guardando las respuestas de la primera mitad en cuartos y mezclando
-#los cuartos de las respuestas de la primera mitad para crear las respuestas de la
-#nueva generacion
+# Crossover se encarga de mezclar las mejores dos respuestas de la lista de agentes de la generacion actual
+# 
 def crossover(agents):
+    # Creamos una lista de agentes para la nueva generacion
     new_generation=[]
     agents_to_use=[]
 
+    # Se crea una iteracion para cada agente de la generacion actual
     for i in range(len(agents)):
         agents_to_use.append(agents[i])
     
+    # Se obtiene una lista de los mejores dos agentes de la generacion actual
     tenth_list=tenth(agents_to_use)
-    
+
+    # Se crea una iteracion para cada agente de la generacion actual    
     for i in range(len(agents)):
+        
+        # Se crea una lista de agentes para la nueva generacion
         new_agent=[]
+
+        # Se crea una iteracion para cada agente de la lista de los mejores dos agentes de la generacion actuals
         for j in range(10):
                 new_agent+=tenth_list[random.randint(0,1)][j]
+
+        # Se añade el agente a la lista de agentes de la nueva generacion
         new_generation.append(new_agent)
     return new_generation 
 
+
+# La funcion tenth se encarga de devolver una lista con los genes de los mejores dos agentes de la lista de agentes de la generacion actual
 def tenth(agents):
     tenth_list=[]
     father=agents[0]
@@ -154,10 +181,11 @@ def tenth(agents):
     tenth_list.append(mother_genes)
     return tenth_list
 
-#Mutacion se usa una vez creada una nueva generacion para mutar las respuestas
-#de esta generacion. Se muta una respuesta si el numero aleatorio es menor al
-#porcentaje de mutacion. Se muta una respuesta cambiando un elemento de la respuesta
-#por un elemento aleatorio de la secuencia
+# Mutacion se usa una vez creada una nueva generacion para mutar las respuestas
+# de esta generacion. Se muta una respuesta si el numero aleatorio es menor al
+# porcentaje de mutacion. Se muta una respuesta cambiando un elemento de la respuesta
+# por un elemento aleatorio de la secuencia, y se repite este proceso hasta que la
+# no se cumpla la condicion
 
 
 def mutation(agents,mutation_rate,threshold):
