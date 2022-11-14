@@ -12,45 +12,73 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size):
     cont_same=0
     last_gen_best=0
     i=1
+    
     #Se crea la primera generacion utilizando el greedy probabilista
     first_generation=first_Generation(sequences,threshold,population_size)
+    
     # Se ordena la primera generacion en base a su calidad y se guarda la mejor junto con su calidad y tiempo
     best_agent=fitness(sequences,first_generation,metric)[0]
     best_quality=uf.answer_Quality(sequences,best_agent,metric)
     best_time_found=time.time()-current_time
+    
     # Antes de empezar el ciclo se guarda la primera generacion como la generacion actual
     current_generation=first_generation
     print(f'first generation created')
+    # Empezamos el ciclo
     while(t.is_alive()):
-        #print the number of generation
+        
+        # Se printea por pantalla la generacion actual
         print(f'generation {i}')
-        #ordenamos las respuestas de la generacion actual
+        
+        # Se ordena la generacion actual en base a su calidad
         generation_ordered_by_fitness=fitness(sequences,current_generation,metric)
+        
+        # Se printea por pantalla la mejor respuesta de la generacion actual
         print(uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric))
+
         #Revisamos si la mejor respuesta de la generacion actual es mejor que la mejor respuesta
         if(uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)>best_quality):
+            
+            # Se guarda la mejor respuesta anterior en la lista de la primera generacion
             first_generation[random.randint(0,population_size-1)]=best_agent
+            
+            # Se actualiza la mejor respuesta con su calidad y tiempo
             best_agent=generation_ordered_by_fitness[0]
             best_quality=uf.answer_Quality(sequences,best_agent,metric)
             best_time_found=time.time()-current_time
+            
             #print the quality of the best agent found and the time it took to find it
             print(f'best agent found: {best_quality} in {best_time_found} seconds')
+        
+        #Reviamos si la mejor respuesta de la generacion actual es igual a la mejor respuesta de la generacion anterior 
         if(last_gen_best==uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)):
-            cont_same+=1
+            
+            # Si es igual aumentamos el contador de respuestas iguales
+            cont_ansame+=1
+            
+            # Si el contador de respuestas iguales es igual a 10 reiniciamos el contador e ingresamos una respuesta de la primera generacion
             if cont_same==10:
-                #create a new agent replacin the second best agent
+                
+                # Ingresamos una respuesta de la primera generacion
                 generation_ordered_by_fitness[1]=first_generation[random.randint(0,population_size-1)]
-                #reset the counter
+                
+                # Reiniciamos el contador
                 cont_same=0
         else:
-            #reset the counter
+            
+            # Reiniciamos el contador
             cont_same=0
+        
         #Se crea la nueva generacion utilizando crossover
         new_generation=crossover(generation_ordered_by_fitness)
+        
         #Se mutan las respuestas de la nueva generacion
         new_generation=mutation(new_generation,mutation_rate,threshold)
-        #La nueva generacion se convierte en la generacion actual
+        
+        # Se actualiza el mejor de la generacion anterior
         last_gen_best=uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)
+        
+        #La nueva generacion se convierte en la generacion actual
         current_generation=new_generation
         i+=1
     return best_agent,best_quality,best_time_found
@@ -142,7 +170,7 @@ def mutation(agents,mutation_rate,threshold):
                     if(position==len(agents[0])):
                         position=0
                     agents[i][position]=random.choice(['A','C','G','T'])
-                    if(random.random()>mutation_rate or position==len(agents[0])):
+                    if(random.random()>mutation_rate):
                         break
                     else:
                         position+=1
