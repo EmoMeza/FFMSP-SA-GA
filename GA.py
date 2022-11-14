@@ -15,8 +15,8 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size):
     #Se crea la primera generacion utilizando el greedy probabilista
     first_generation=first_Generation(sequences,threshold,population_size)
     # Se ordena la primera generacion en base a su calidad y se guarda la mejor junto con su calidad y tiempo
-    best_answer=fitness(sequences,first_generation,metric)[0]
-    best_quality=uf.answer_Quality(sequences,best_answer,metric)
+    best_agent=fitness(sequences,first_generation,metric)[0]
+    best_quality=uf.answer_Quality(sequences,best_agent,metric)
     best_time_found=time.time()-current_time
     # Antes de empezar el ciclo se guarda la primera generacion como la generacion actual
     current_generation=first_generation
@@ -29,16 +29,16 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size):
         print(uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric))
         #Revisamos si la mejor respuesta de la generacion actual es mejor que la mejor respuesta
         if(uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)>best_quality):
-            first_generation[random.randint(0,population_size-1)]=best_answer
-            best_answer=generation_ordered_by_fitness[0]
-            best_quality=uf.answer_Quality(sequences,best_answer,metric)
+            first_generation[random.randint(0,population_size-1)]=best_agent
+            best_agent=generation_ordered_by_fitness[0]
+            best_quality=uf.answer_Quality(sequences,best_agent,metric)
             best_time_found=time.time()-current_time
-            #print the quality of the best answer found and the time it took to find it
-            print(f'best answer found: {best_quality} in {best_time_found} seconds')
+            #print the quality of the best agent found and the time it took to find it
+            print(f'best agent found: {best_quality} in {best_time_found} seconds')
         if(last_gen_best==uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)):
             cont_same+=1
             if cont_same==10:
-                #create a new answer replacin the second best answer
+                #create a new agent replacin the second best agent
                 generation_ordered_by_fitness[1]=first_generation[random.randint(0,population_size-1)]
                 #reset the counter
                 cont_same=0
@@ -53,7 +53,7 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size):
         last_gen_best=uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)
         current_generation=new_generation
         i+=1
-    return best_answer,best_quality,best_time_found
+    return best_agent,best_quality,best_time_found
 
 
 #Se crea la primera generacion en base al greedy probabilista
@@ -63,7 +63,7 @@ def first_Generation(sequences,threshold,population_size):
     first_generation=[]
     for i in range(population_size):
         first_generation.append(lsf.constructionPhase(sequences,threshold))
-        print(f'answer {i+1}/{population_size} created')
+        print(f'agent {i+1}/{population_size} created')
     return first_generation
 
 #El fitness revisa la calidad de cada respuesta y las ordena de mayor a menor
@@ -71,8 +71,8 @@ def first_Generation(sequences,threshold,population_size):
 # teniendo asi en la primera mitad de la lista las respuestas con mayor calidad 
 def fitness(sequences,current_generation,metric):
     fitness=[]
-    for answer in current_generation:
-        fitness.append(uf.answer_Quality(sequences,answer,metric))
+    for agent in current_generation:
+        fitness.append(uf.answer_Quality(sequences,agent,metric))
     for i in range(len(fitness)):
         for j in range(len(fitness)):
             if(fitness[i]>fitness[j]):
@@ -88,26 +88,26 @@ def fitness(sequences,current_generation,metric):
 #Esto lo hacen guardando las respuestas de la primera mitad en cuartos y mezclando
 #los cuartos de las respuestas de la primera mitad para crear las respuestas de la
 #nueva generacion
-def crossover(answers):
+def crossover(agents):
     new_generation=[]
-    answers_to_use=[]
+    agents_to_use=[]
 
-    for i in range(len(answers)):
-        answers_to_use.append(answers[i])
+    for i in range(len(agents)):
+        agents_to_use.append(agents[i])
     
-    tenth_list=tenth(answers_to_use)
+    tenth_list=tenth(agents_to_use)
     
-    for i in range(len(answers)):
-        new_answer=[]
+    for i in range(len(agents)):
+        new_agent=[]
         for j in range(10):
-                new_answer+=tenth_list[random.randint(0,1)][j]
-        new_generation.append(new_answer)
+                new_agent+=tenth_list[random.randint(0,1)][j]
+        new_generation.append(new_agent)
     return new_generation 
 
-def tenth(answers):
+def tenth(agents):
     tenth_list=[]
-    father=answers[0]
-    mother=answers[1]
+    father=agents[0]
+    mother=agents[1]
     father_genes=[]
     mother_genes=[]
     #first we save the genes of the father
@@ -132,18 +132,18 @@ def tenth(answers):
 #por un elemento aleatorio de la secuencia
 
 
-def mutation(answers,mutation_rate,threshold):
-    for i in range(len(answers)):
+def mutation(agents,mutation_rate,threshold):
+    for i in range(len(agents)):
         if(random.random()<mutation_rate):
-            for j in range(int(len(answers[0]))-int(float(len(answers[0]))*float(threshold))):
-                position=random.randint(0,len(answers[0]))
-                #position=random.randint(int(float(len(answers[0]))*float(threshold)),len(answers[0]))
+            for j in range(int(len(agents[0]))-int(float(len(agents[0]))*float(threshold))):
+                position=random.randint(0,len(agents[0]))
+                #position=random.randint(int(float(len(agents[0]))*float(threshold)),len(agents[0]))
                 while True:
-                    if(position==len(answers[0])):
+                    if(position==len(agents[0])):
                         position=0
-                    answers[i][position]=random.choice(['A','C','G','T'])
-                    if(random.random()>mutation_rate or position==len(answers[0])):
+                    agents[i][position]=random.choice(['A','C','G','T'])
+                    if(random.random()>mutation_rate or position==len(agents[0])):
                         break
                     else:
                         position+=1
-    return answers
+    return agents
