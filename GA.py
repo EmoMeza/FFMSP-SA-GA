@@ -8,7 +8,7 @@ import time
 solutions=[]
 
 
-def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size):
+def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size,tuning):
     cont_same=0
     last_gen_best=0
     i=1
@@ -23,19 +23,14 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size):
     
     # Antes de empezar el ciclo se guarda la primera generacion como la generacion actual
     current_generation=first_generation
-    print(f'first generation created')
     # Empezamos el ciclo
     while(t.is_alive()):
         
         # Se printea por pantalla la generacion actual
-        print(f'generation {i}')
         
         # Se ordena la generacion actual en base a su calidad
         generation_ordered_by_fitness=fitness(sequences,current_generation,metric)
         
-        # Se printea por pantalla la mejor respuesta de la generacion actual
-        print(uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric))
-
         #Revisamos si la mejor respuesta de la generacion actual es mejor que la mejor respuesta
         if(uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)>best_quality):
             
@@ -46,10 +41,13 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size):
             best_agent=generation_ordered_by_fitness[0]
             best_quality=uf.answer_Quality(sequences,best_agent,metric)
             best_time_found=time.time()-current_time
+
+            if tuning == False:
+                # Se printea por pantalla la mejor respuesta de la generacion actual
+                print(f'Mejor respuesta encontrada: {best_agent}')
+                print(f'Calidad de la mejor respuesta: {best_quality}')
+                print(f'Tiempo de busqueda: {best_time_found}')
             
-            #print the quality of the best agent found and the time it took to find it
-            print(f'best agent found: {best_quality} in {best_time_found} seconds')
-        
         #Reviamos si la mejor respuesta de la generacion actual es igual a la mejor respuesta de la generacion anterior 
         if(last_gen_best==uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)):
             
@@ -88,7 +86,6 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size):
 def first_Generation(sequences,threshold,population_size):
     
     #print that the first generation is being created
-    print('creating first generation')
     
     #creamos la lista de agentes para la primera generacion
     first_generation=[]
@@ -100,7 +97,6 @@ def first_Generation(sequences,threshold,population_size):
         first_generation.append(lsf.constructionPhase(sequences,threshold))
         
         # Se entrega el progreso de la creacion de la primera generacion
-        print(f'agent {i+1}/{population_size} created')
     return first_generation
 
 # La funcion fitness ordena la generacion actual en base a su calidad

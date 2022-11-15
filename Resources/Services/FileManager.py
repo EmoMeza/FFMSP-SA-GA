@@ -4,7 +4,8 @@ import Resources.Classes.Sequences as seq
 
 def open_File_By_Name(name):
     current_path=os.getcwd() 
-    file_path=current_path+"/Resources/Examples/"+str(name)
+    file_path=current_path+"/../Tuning_CMSA/Instances/"+str(name)
+    #file_path=current_path+"/Resources/Examples/"+str(name)
     file=open(file_path,"r")
     sequences=[]
     for line in file:
