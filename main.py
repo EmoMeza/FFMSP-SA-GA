@@ -1,7 +1,6 @@
 import Resources.Services.FileManager as fm
 import Resources.Functions.HammingFunctions as hf
 import GA as GA
-
 import sys
 from time import sleep
 import time
@@ -47,7 +46,7 @@ if __name__ == '__main__':
         print("\tpython3 main.py -i [Filename] -t [MaxTimeInSeconds] -th [ThresholdValue] -p [PopulationSize] -mr [MutationRate]\n")
         print("Example: python3 main.py -i sequences.txt -t 90 -th 0.8 -p 10 -mr 0.1\n")
         print("Regarding the arguments:\n -th [ThresholdValue] must be a float number between 0 and 1\n")
-        print(" -p [PopulationSize] must be an integer number (between 1 and 15 is recommended)\n")
+        print(" -p [PopulationSize] must be an integer number (between 5 and 15 is recommended)\n")
         print(" -mr [MutationRate] must be a float number between 0 and 1\n")
         print("This program will display the time and quality of the best solution obtained")
 
