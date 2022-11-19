@@ -1,7 +1,7 @@
 # FFMSP-SA-GA
 FFMSP-SA-GA
 Trabajo de Sistemas Adaptativos
-Integrandes: Ana Vargas, Emilio Meza
+Integrantes: Ana Vargas, Emilio Meza
 
 Programa dedicado a la creacion de un algoritmo genetico aplicable a FFMSP. El Programa consiste en crear una generacion inicial utilizando Greedy Probabilista de entregas anteriores. De esta generacion se obtendran los mejores dos agentes, y dividiendo la secuencia de cada uno en 10 partes iguales, las cuales se mezclaran entre ambos para crear una nueva generacion. Esta nueva generacion tiene la probabilidad de ser mutada, cambiando valores de forma aleatoria a lo largo de la secuencia. Finalmente esto se va repitiendo.
 
