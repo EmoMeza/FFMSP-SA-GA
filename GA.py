@@ -28,13 +28,9 @@ def GA(sequences,threshold,t,metric,current_time,mutation_rate,population_size):
     while(t.is_alive()):
         
         # Se printea por pantalla la generacion actual
-        print(f'generation {i}')
         
         # Se ordena la generacion actual en base a su calidad
         generation_ordered_by_fitness=fitness(sequences,current_generation,metric)
-        
-        # Se printea por pantalla la mejor respuesta de la generacion actual
-        print(uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric))
 
         #Revisamos si la mejor respuesta de la generacion actual es mejor que la mejor respuesta
         if(uf.answer_Quality(sequences,generation_ordered_by_fitness[0],metric)>best_quality):

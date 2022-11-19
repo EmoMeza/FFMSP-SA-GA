@@ -1,6 +1,5 @@
 import Resources.Services.FileManager as fm
 import Resources.Functions.HammingFunctions as hf
-import Resources.Functions.GraspFunctions as grsp
 import GA as GA
 
 import sys
@@ -38,21 +37,24 @@ if __name__ == '__main__':
     if(len(sys.argv)==1):
         print("Incorrect execution:\tNo Arguments\n")
         print("For help, enter the following argument:")
-        print("\tpython3 grasp.py -h")
+        print("\tpython3 main.py -h")
 
     elif(len(sys.argv)==2 and sys.argv[1]=="-h"):
         print("\t\t\t~~~~~~~~")
         print("\t\t\t| Help |")
         print("\t\t\t~~~~~~~~\n")
         print("For correct execution of the program, you must enter the following arguments:\n")
-        print("\tpython3 grasp.py -i [Filename] -t [MaxTimeInSeconds]\n")
-        print("Example: python3 grasp.py -i sequences.txt -t 6000")
-        print("This program will display the time and quality of the solution obtained")
+        print("\tpython3 main.py -i [Filename] -t [MaxTimeInSeconds] -th [ThresholdValue] -p [PopulationSize] -mr [MutationRate]\n")
+        print("Example: python3 main.py -i sequences.txt -t 90 -th 0.8 -p 10 -mr 0.1\n")
+        print("Regarding the arguments:\n -th [ThresholdValue] must be a float number between 0 and 1\n")
+        print(" -p [PopulationSize] must be an integer number (between 1 and 15 is recommended)\n")
+        print(" -mr [MutationRate] must be a float number between 0 and 1\n")
+        print("This program will display the time and quality of the best solution obtained")
 
     elif((len(sys.argv)==11 and sys.argv[1]=="-i" and sys.argv[3]=="-t" and sys.argv[5]=="-th" and sys.argv[7]=="-p" and sys.argv[9]=="-mr")):
         main()
     else:
         print("Incorrect execution")
         print("For help, enter the following argument:")
-        print("python3 grasp.py -h")
+        print("python3 main.py -h")
         
